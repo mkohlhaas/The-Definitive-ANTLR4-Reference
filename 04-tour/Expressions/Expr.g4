@@ -1,10 +1,11 @@
 grammar Expr;
 
-/** The start rule; begin parsing here. */ prog
-   : stat+
+prog
+   // The start rule; begin parsing here.
+   : statement+
    ;
 
-stat
+statement
    : expr NEWLINE
    | ID '=' expr NEWLINE
    | NEWLINE
@@ -19,18 +20,22 @@ expr
    ;
 
 ID
+   // match identifiers
    : [a-zA-Z]+
-   ; // match identifiers <label id="code.tour.expr.3"/>
+   ;
 
 INT
+   // match integers
    : [0-9]+
-   ; // match integers
+   ;
 
 NEWLINE
+   // return newlines to parser (is end-statement signal)
    : '\r'? '\n'
-   ; // return newlines to parser (is end-statement signal)
+   ;
 
 WS
+   // toss out whitespace
    : [ \t]+ -> skip
-   ; // toss out whitespace
+   ;
 

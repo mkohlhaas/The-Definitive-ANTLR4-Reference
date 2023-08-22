@@ -9,7 +9,7 @@ grammar Rows;
     }
 }
 file
-   : (row NL)+
+   : (row NEWLINE)+
    ;
 
 row locals[int i=0]
@@ -24,7 +24,7 @@ TAB
    : '\t' -> skip
    ; // match but don't pass to the parser
 
-NL
+NEWLINE
    : '\r'? '\n'
    ; // match and pass to the parser
 

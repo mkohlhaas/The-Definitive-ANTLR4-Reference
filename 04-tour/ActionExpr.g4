@@ -8,7 +8,8 @@ import java.util.*;
 {
     Map<String, Integer> memory = new HashMap<String, Integer>();
 }
-/** The start rule; begin parsing here. */ prog
+prog
+   // The start rule; begin parsing here.
    : stat+
    ;
 
