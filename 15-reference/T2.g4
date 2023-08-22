@@ -1,3 +1,8 @@
 grammar T2;
-options {TokenLabelType=MyToken;}
-a : x=ID ;
+
+
+options { TokenLabelType = MyToken; }
+a
+   : x = ID
+   ;
+

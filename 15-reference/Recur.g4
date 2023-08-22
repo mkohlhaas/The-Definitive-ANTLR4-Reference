@@ -1,5 +1,10 @@
 lexer grammar Recur;
 
-ACTION : '{' ( ACTION | ~[{}] )* '}' ;
+ACTION
+   : '{' (ACTION | ~ [{}])* '}'
+   ;
 
-WS     : [ \r\t\n]+ -> skip ;
+WS
+   : [ \r\t\n]+ -> skip
+   ;
+

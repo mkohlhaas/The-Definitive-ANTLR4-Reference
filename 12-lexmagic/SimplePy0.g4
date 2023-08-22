@@ -1,43 +1,57 @@
 /** Explore Python newline and comment processing */
 grammar SimplePy0;
 
-file:	stat+ EOF ;
+file
+   : stat+ EOF
+   ;
 
-stat:   assign NEWLINE
-	|	expr NEWLINE
-    |   NEWLINE         // ignore blank lines
-    ;
+stat
+   : assign NEWLINE
+   | expr NEWLINE
+   | NEWLINE // ignore blank lines
 
-assign:	ID '=' expr ;
+   ;
 
-expr:   expr '+' expr
-	|	'(' expr ')'
-	|	call
-    |   list
-    |	ID
-    |   INT
-    ;
+assign
+   : ID '=' expr
+   ;
 
-call:   ID '(' expr (',' expr)* ')' ;
+expr
+   : expr '+' expr
+   | '(' expr ')'
+   | call
+   | list
+   | ID
+   | INT
+   ;
 
-list:   '[' expr (',' expr)* ']' ;
+call
+   : ID '(' expr (',' expr)* ')'
+   ;
 
-ID	:	[a-zA-Z_] [a-zA-Z_0-9]* ;
+list
+   : '[' expr (',' expr)* ']'
+   ;
 
-INT :   [0-9]+ ;
+ID
+   : [a-zA-Z_] [a-zA-Z_0-9]*
+   ;
 
-/** Newline ends a statement */
-NEWLINE
-    :   '\r'? '\n'
-    ;
+INT
+   : [0-9]+
+   ;
 
-/** Warning: doesn't handle INDENT/DEDENT Python rules */
-WS  :   [ \t]+ -> skip
-    ;
+/** Newline ends a statement */ NEWLINE
+   : '\r'? '\n'
+   ;
+
+/** Warning: doesn't handle INDENT/DEDENT Python rules */ WS
+   : [ \t]+ -> skip
+   ;
 
 /** Ignore backslash newline sequences. This disallows comments
  *  after the backslash because newline must occur next.
- */
-LINE_ESCAPE
-	:	'\\' '\r'? '\n' -> skip
-	;
+ */ LINE_ESCAPE
+   : '\\' '\r'? '\n' -> skip
+   ;
+

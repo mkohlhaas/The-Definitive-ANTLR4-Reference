@@ -1,15 +1,28 @@
 grammar CSV;
 
-file : hdr row+ ;
-hdr : row ;
+file
+   : hdr row+
+   ;
 
-row : field (',' field)* '\r'? '\n' ;
+hdr
+   : row
+   ;
+
+row
+   : field (',' field)* '\r'? '\n'
+   ;
 
 field
-    :   TEXT	# text
-    |   STRING	# string
-    |		# empty
-    ;
+   : TEXT # text
+   | STRING # string
+   | # empty
+   ;
 
-TEXT : ~[,\n\r"]+ ;
-STRING : '"' ('""'|~'"')* '"' ;
+TEXT
+   : ~ [,\n\r"]+
+   ;
+
+STRING
+   : '"' ('""' | ~ '"')* '"'
+   ;
+

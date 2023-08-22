@@ -1,2 +1,6 @@
 grammar Hi;
-a : 'hi' ;
+
+a
+   : 'hi'
+   ;
+

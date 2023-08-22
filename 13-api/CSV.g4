@@ -6,21 +6,28 @@
  */
 grammar CSV;
 
-@members {
+@ members
+{
 double x, y; // keep column sums in these fields
 }
+file
+   : row+
+   {System.out.printf("%f, %f\n", x, y);}
+   ;
 
-file: row+ {System.out.printf("%f, %f\n", x, y);} ;
-
-row : a=field ',' b=field '\r'? '\n'
-      {
+row
+   : a = field ',' b = field '\r'? '\n'
+   {
       x += Double.valueOf($a.start.getText());
       y += Double.valueOf($b.start.getText());
       }
-    ;
+   ;
 
 field
-    : TEXT
-    ;
+   : TEXT
+   ;
 
-TEXT : ~[,\n\r]+ ;
+TEXT
+   : ~ [,\n\r]+
+   ;
+

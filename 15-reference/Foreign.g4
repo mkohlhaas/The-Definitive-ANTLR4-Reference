@@ -1,2 +1,6 @@
 grammar Foreign;
-a : '外' ;
+
+a
+   : '外'
+   ;
+

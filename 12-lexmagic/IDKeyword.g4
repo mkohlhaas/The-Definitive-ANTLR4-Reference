@@ -1,15 +1,31 @@
 grammar IDKeyword;
 
-prog: stat+ ;
+prog
+   : stat+
+   ;
 
-stat: 'if' expr 'then' stat
-    | 'call' id ';'
-    | ';'
-    ;
+stat
+   : 'if' expr 'then' stat
+   | 'call' id ';'
+   | ';'
+   ;
 
-expr: id ;
+expr
+   : id
+   ;
 
-id  :   'if' | 'call' | 'then' | ID ;
+id
+   : 'if'
+   | 'call'
+   | 'then'
+   | ID
+   ;
 
-ID : [a-z]+ ;
-WS : [ \r\n]+ -> skip ;
+ID
+   : [a-z]+
+   ;
+
+WS
+   : [ \r\n]+ -> skip
+   ;
+

@@ -1,3 +1,7 @@
 grammar Tok;
-tokens { A, B, C }
-a : X ;
+
+tokens { A , B , C }
+a
+   : X
+   ;
+

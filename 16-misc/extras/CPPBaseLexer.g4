@@ -1,12 +1,12 @@
 lexer grammar CPPBaseLexer;
 
-@header {
+@ header
+{
 import java.util.List;
 }
-
 INCLUDE
-	:	'#include' [ \t]* STRING [ \t]* '\r'? '\n'
-		{
+   : '#include' [ \t]* STRING [ \t]* '\r'? '\n'
+   {
 		// launch another lexer on the include file, get tokens,
 		// emit them all at once here, replacing this token
 		List<CPPToken> tokens = CPP.include(getText());
@@ -15,11 +15,17 @@ INCLUDE
 			for (CPPToken t : tokens) emit(t);
 		}
 		}
-	;
+   ;
 
-fragment
-STRING : '"' .*? '"' ;
+fragment STRING
+   : '"' .*? '"'
+   ;
 
-OTHER_CMD : '#' ~[\r\n]* '\r'? '\n' ; // can't use .*; scarfs \n\n after include
+OTHER_CMD
+   : '#' ~ [\r\n]* '\r'? '\n'
+   ; // can't use .*; scarfs \n\n after include
 
-CHUNK : ~'#'+ ; // anything else
+CHUNK
+   : ~ '#'+
+   ; // anything else
+

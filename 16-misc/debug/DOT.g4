@@ -32,77 +32,162 @@ digraph structs {
  */
 grammar DOT;
 
-graph       :   STRICT? (GRAPH | DIGRAPH) id? '{' stmt_list '}' ;
-stmt_list   :   ( stmt ';'? )* ;
-stmt        :   node_stmt
-            |   edge_stmt
-            |   attr_stmt
-            |   id '=' id
-            |   subgraph
-            ;
-attr_stmt   :   (GRAPH | NODE | EDGE) attr_list ;
-attr_list   :   ('[' a_list? ']')+ ;
-a_list      :   (id ('=' id)? ','?)+ ;
-edge_stmt   :   (node_id | subgraph) edgeRHS attr_list? ;
-edgeRHS     :   ( edgeop (node_id | subgraph) )+ ;
-edgeop      :   '->' | '--' ;
-node_stmt   :   node_id attr_list? ;
-node_id     :   id port? ;
-port        :   ':' id (':' compass_pt)?
-            |   ':' compass_pt
-            ;
-subgraph    :   (SUBGRAPH id?)? '{' stmt_list '}' ;
+graph
+   : STRICT? (GRAPH | DIGRAPH) id? '{' stmt_list '}'
+   ;
+
+stmt_list
+   : (stmt ';'?)*
+   ;
+
+stmt
+   : node_stmt
+   | edge_stmt
+   | attr_stmt
+   | id '=' id
+   | subgraph
+   ;
+
+attr_stmt
+   : (GRAPH | NODE | EDGE) attr_list
+   ;
+
+attr_list
+   : ('[' a_list? ']')+
+   ;
+
+a_list
+   : (id ('=' id)? ','?)+
+   ;
+
+edge_stmt
+   : (node_id | subgraph) edgeRHS attr_list?
+   ;
+
+edgeRHS
+   : (edgeop (node_id | subgraph))+
+   ;
+
+edgeop
+   : '->'
+   | '--'
+   ;
+
+node_stmt
+   : node_id attr_list?
+   ;
+
+node_id
+   : id port?
+   ;
+
+port
+   : ':' id (':' compass_pt)?
+   | ':' compass_pt
+   ;
+
+subgraph
+   : (SUBGRAPH id?)? '{' stmt_list '}'
+   ;
+
 /** "the allowed compass point values are not keywords, so these strings
  *  can be used elsewhere as ordinary identifiers and, conversely, the
  *  parser will actually accept any identifier.
  *  'n' | 'ne' | 'e' | 'se' | 's' | 'sw' | 'w' | 'nw' | 'c' | '_'"
  *  TJP: later the ID needs to be checked for membership in these
  *  compass points.
- */
-compass_pt  :   ID | '_' ;
-id          :   ID
-            |   STRING
-            |   HTML_STRING
-            |   NUMBER
-            ;
+ */ compass_pt
+   : ID
+   | '_'
+   ;
 
-// "The keywords node, edge, graph, digraph, subgraph, and strict are
-// case-independent"
-STRICT      :   [Ss][Tt][Rr][Ii][Cc][Tt] ;
-GRAPH       :   [Gg][Rr][Aa][Pp][Hh] ;
-DIGRAPH     :   [Dd][Ii][Gg][Rr][Aa][Pp][Hh] ;
-NODE        :   [Nn][Oo][Dd][Ee] ;
-EDGE        :   [Ee][Dd][Gg][Ee] ;
-SUBGRAPH    :   [Ss][Uu][Bb][Gg][Rr][Aa][Pp][Hh] ;
+id
+   : ID
+   | STRING
+   | HTML_STRING
+   | NUMBER
+   ;
+   // "The keywords node, edge, graph, digraph, subgraph, and strict are
 
-/** "a numeral [-]?(.[0-9]+ | [0-9]+(.[0-9]*)? )" */
-NUMBER      :   '-'? ('.' DIGIT+ | DIGIT+ ('.' DIGIT*)? ) ;
-fragment
-DIGIT       :   '0'..'9' ;
+   // case-independent"
 
-/** "any double-quoted string ("...") possibly containing escaped quotes" */
-STRING      :   '"' ('\\"'|.)*? '"' ;
+STRICT
+   : [Ss] [Tt] [Rr] [Ii] [Cc] [Tt]
+   ;
+
+GRAPH
+   : [Gg] [Rr] [Aa] [Pp] [Hh]
+   ;
+
+DIGRAPH
+   : [Dd] [Ii] [Gg] [Rr] [Aa] [Pp] [Hh]
+   ;
+
+NODE
+   : [Nn] [Oo] [Dd] [Ee]
+   ;
+
+EDGE
+   : [Ee] [Dd] [Gg] [Ee]
+   ;
+
+SUBGRAPH
+   : [Ss] [Uu] [Bb] [Gg] [Rr] [Aa] [Pp] [Hh]
+   ;
+
+/** "a numeral [-]?(.[0-9]+ | [0-9]+(.[0-9]*)? )" */ NUMBER
+   : '-'? ('.' DIGIT+ | DIGIT+ ('.' DIGIT*)?)
+   ;
+
+fragment DIGIT
+   : '0' .. '9'
+   ;
+
+/** "any double-quoted string ("...") possibly containing escaped quotes" */ STRING
+   : '"' ('\\"' | .)*? '"'
+   ;
 
 /** "HTML strings, angle brackets must occur in matched pairs, and
  *  unescaped newlines are allowed."
- */
+ */ HTML_STRING
+   : '<' (TAG | EntityRef | .)* '>'
+   ;
 
-HTML_STRING :   '<' (TAG|EntityRef|.)* '>' ;
-TAG         :   '<' .*? '>' ;
-EntityRef   :   '&' LETTER+ ';' ;
+TAG
+   : '<' .*? '>'
+   ;
+
+EntityRef
+   : '&' LETTER+ ';'
+   ;
 
 /** "Any string of alphabetic ([a-zA-Z\200-\377]) characters, underscores
  *  ('_') or digits ([0-9]), not beginning with a digit"
- */
-ID          :   LETTER (LETTER|DIGIT)*;
-fragment
-LETTER      :   [a-zA-Z\u0080-\u00FF_] ;
+ */ ID
+   : LETTER (LETTER | DIGIT)*
+   ;
 
-COMMENT     :   '/*' .*? '*/' {skip();} ;
-LINE_COMMENT:   '//' .*? '\r'? '\n' {skip();} ;
+fragment LETTER
+   : [a-zA-Z\u0080-\u00FF_]
+   ;
+
+COMMENT
+   : '/*' .*? '*/'
+   {skip();}
+   ;
+
+LINE_COMMENT
+   : '//' .*? '\r'? '\n'
+   {skip();}
+   ;
+
 /** "a '#' character is considered a line output from a C preprocessor (e.g.,
  *  # 34 to indicate line 34 ) and discarded"
- */
-PREPROC     :   '#' .*? '\n' -> skip ;
+ */ PREPROC
+   : '#' .*? '\n' -> skip
+   ;
 
-WS          :   [ \t\r\n] -> skip ;
+WS
+   : [ \t\r\n] -> skip
+   ;
+

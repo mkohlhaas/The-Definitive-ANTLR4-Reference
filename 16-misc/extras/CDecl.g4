@@ -1,18 +1,31 @@
 grammar CDecl;
 
-decl: 'int' declarator ';' ;
+decl
+   : 'int' declarator ';'
+   ;
 
 declarator
-    :   declarator '[' expr ']'
-    |   declarator '[' ']'
-    |   declarator '(' ')'
-    |   '*' declarator
-    |   '(' declarator ')'
-    |   ID
-    ;
+   : declarator '[' expr ']'
+   | declarator '[' ']'
+   | declarator '(' ')'
+   | '*' declarator
+   | '(' declarator ')'
+   | ID
+   ;
 
-expr:   INT ;
+expr
+   : INT
+   ;
 
-ID  :   [a-zA-Z]+ ;
-INT :   [0-9]+ ;
-WS  :   [ \t\n\r]+ -> skip ;
+ID
+   : [a-zA-Z]+
+   ;
+
+INT
+   : [0-9]+
+   ;
+
+WS
+   : [ \t\n\r]+ -> skip
+   ;
+

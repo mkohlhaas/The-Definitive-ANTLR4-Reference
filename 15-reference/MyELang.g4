@@ -1,4 +1,12 @@
 grammar MyELang;
+
 import ELang;
-expr : INT | ID ;
-INT :   [0-9]+ ;
+expr
+   : INT
+   | ID
+   ;
+
+INT
+   : [0-9]+
+   ;
+

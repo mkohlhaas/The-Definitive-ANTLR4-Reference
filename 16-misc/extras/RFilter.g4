@@ -3,29 +3,38 @@
 */
 parser grammar RFilter;
 
-options { tokenVocab=R; }
 
-@members {
+options { tokenVocab = R; }
+@ members
+{
 protected int curlies = 0;
 }
-
 // TODO: MAKE THIS GET ONE COMMAND ONLY
-stream : (elem|NL|';')* EOF ;
 
-eat :   (NL {((WritableToken)$NL).setChannel(Token.HIDDEN_CHANNEL);})+ ;
+stream
+   : (elem | NL | ';')* EOF
+   ;
 
-elem:   op eat?
-    |   atom
-    |   '{' eat? {curlies++;} (elem|NL|';')* {curlies--;} '}'
-    |   '(' (elem|eat)* ')'
-    |   '[' (elem|eat)* ']'
-    |   '[[' (elem|eat)* ']' ']'
-    |   'function' eat? '(' (elem|eat)* ')' eat?
-    |   'for' eat? '(' (elem|eat)* ')' eat?
-    |   'while' eat? '(' (elem|eat)* ')' eat?
-    |   'if' eat? '(' (elem|eat)* ')' eat?
-    |   'else'
-        {
+eat
+   : (NL
+   {((WritableToken)$NL).setChannel(Token.HIDDEN_CHANNEL);})+
+   ;
+
+elem
+   : op eat?
+   | atom
+   | '{' eat?
+   {curlies++;} (elem | NL | ';')*
+   {curlies--;} '}'
+   | '(' (elem | eat)* ')'
+   | '[' (elem | eat)* ']'
+   | '[[' (elem | eat)* ']' ']'
+   | 'function' eat? '(' (elem | eat)* ')' eat?
+   | 'for' eat? '(' (elem | eat)* ')' eat?
+   | 'while' eat? '(' (elem | eat)* ')' eat?
+   | 'if' eat? '(' (elem | eat)* ')' eat?
+   | 'else'
+   {
         // ``inside a compound expression, a newline before else is discarded,
         // whereas at the outermost level, the newline terminates the if
         // construction and a subsequent else causes a syntax error.''
@@ -48,13 +57,55 @@ elem:   op eat?
         WritableToken tok = (WritableToken)_input.LT(-2);
         if (curlies>0&&tok.getType()==NL) tok.setChannel(Token.HIDDEN_CHANNEL);
         }
-    ;
+   ;
 
-atom:   'next' | 'break' | ID | STRING | HEX | INT | FLOAT | COMPLEX | 'NULL'
-    |   'NA' | 'Inf' | 'NaN' | 'TRUE' | 'FALSE'
-    ;
+atom
+   : 'next'
+   | 'break'
+   | ID
+   | STRING
+   | HEX
+   | INT
+   | FLOAT
+   | COMPLEX
+   | 'NULL'
+   | 'NA'
+   | 'Inf'
+   | 'NaN'
+   | 'TRUE'
+   | 'FALSE'
+   ;
 
-op  :   '+'|'-'|'*'|'/'|'^'|'<'|'<='|'>='|'>'|'=='|'!='|'&'|'&&'|USER_OP|
-        'repeat'|'in'|'?'|'!'|'='|':'|'~'|'$'|'@'|'<-'|'->'|'='|'::'|':::'|
-        ','|'...'
-    ;
+op
+   : '+'
+   | '-'
+   | '*'
+   | '/'
+   | '^'
+   | '<'
+   | '<='
+   | '>='
+   | '>'
+   | '=='
+   | '!='
+   | '&'
+   | '&&'
+   | USER_OP
+   | 'repeat'
+   | 'in'
+   | '?'
+   | '!'
+   | '='
+   | ':'
+   | '~'
+   | '$'
+   | '@'
+   | '<-'
+   | '->'
+   | '='
+   | '::'
+   | ':::'
+   | ','
+   | '...'
+   ;
+

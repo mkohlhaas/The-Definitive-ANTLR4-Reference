@@ -1,47 +1,81 @@
 grammar ActionExpr;
 
-@parser::header {
+@ parser :: header
+{
 import java.util.*;
 }
-@parser::members {
+@ parser :: members
+{
     Map<String, Integer> memory = new HashMap<String, Integer>();
 }
+/** The start rule; begin parsing here. */ prog
+   : stat+
+   ;
 
-/** The start rule; begin parsing here. */
-prog:   stat+ ;
-
-stat:   expr NEWLINE               {System.out.println($expr.v);}
-    |   ID '=' expr NEWLINE        {
+stat
+   : expr NEWLINE
+   {System.out.println($expr.v);}
+   | ID '=' expr NEWLINE
+   {
                                    String id = $ID.getText();
                                    memory.put(id, $expr.v);
                                    }
-    |   NEWLINE
-    ;
+   | NEWLINE
+   ;
 
-expr returns [int v]
-    :   a=expr op=('*'|'/') b=expr {
+expr returns[int v]
+   : a = expr op = ('*' | '/') b = expr
+   {
                                    if ( $op.getType()==MUL ) $v = $a.v * $b.v;
                                    else $v = $a.v / $b.v;
                                    }
-    |   a=expr op=('+'|'-') b=expr {
+   | a = expr op = ('+' | '-') b = expr
+   {
                                    if ( $op.getType()==ADD ) $v = $a.v + $b.v;
                                    else $v = $a.v - $b.v;
                                    }
-    |   INT                        {$v = Integer.valueOf($INT.getText());}
-    |   ID                         {
+   | INT
+   {$v = Integer.valueOf($INT.getText());}
+   | ID
+   {
                                    String id = $ID.getText();
                                    if ( memory.containsKey(id) ) {
                                        $v = memory.get(id);
                                    }
                                    }
-    |   '(' e=expr ')'             {$v = $e.v;}
-    ;
+   | '(' e = expr ')'
+   {$v = $e.v;}
+   ;
 
-MUL :   '*' ; // assigns token name to '*' used above in grammar
-DIV :   '/' ;
-ADD :   '+' ;
-SUB :   '-' ;
-ID  :   [a-zA-Z]+ ;      // match identifiers
-INT :   [0-9]+ ;         // match integers
-NEWLINE:'\r'? '\n' ;     // return newlines to parser (is end-statement signal)
-WS  :   [ \t]+ -> skip ; // toss out whitespace
+MUL
+   : '*'
+   ; // assigns token name to '*' used above in grammar
+
+DIV
+   : '/'
+   ;
+
+ADD
+   : '+'
+   ;
+
+SUB
+   : '-'
+   ;
+
+ID
+   : [a-zA-Z]+
+   ; // match identifiers
+
+INT
+   : [0-9]+
+   ; // match integers
+
+NEWLINE
+   : '\r'? '\n'
+   ; // return newlines to parser (is end-statement signal)
+
+WS
+   : [ \t]+ -> skip
+   ; // toss out whitespace
+

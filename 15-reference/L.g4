@@ -1,4 +1,11 @@
 lexer grammar L;
-AND : '&' ;
+
+AND
+   : '&'
+   ;
+
 mode STR;
-MASK : '&' ;
+MASK
+   : '&'
+   ;
+

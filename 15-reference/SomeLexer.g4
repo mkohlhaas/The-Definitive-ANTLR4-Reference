@@ -1,2 +1,6 @@
 lexer grammar SomeLexer;
-ID : [a-z]+ ;
+
+ID
+   : [a-z]+
+   ;
+
